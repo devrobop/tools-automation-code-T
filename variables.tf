@@ -3,7 +3,7 @@ variable "tools" {
 
 
    github-runner = {
-    instance_type = "t3.small"
+    instance_type = "t3.micro"
    }
 
   }
