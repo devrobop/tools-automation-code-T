@@ -13,9 +13,9 @@ resource "aws_instance" "tool" {
     }
   }
 
-  root_block_device {
-    volume_size = var.volume_size
-  }  
+  # root_block_device {
+  #   volume_size = var.volume_size
+  # }  
      
 
   tags = {
