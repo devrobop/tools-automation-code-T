@@ -1,4 +1,4 @@
-name: Run Vault Setup
+name: Run github-runner Setup
 on: [workflow_dispatch]
 jobs: 
   Provision:
