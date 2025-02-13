@@ -74,7 +74,7 @@
 
 - name: Update path file
   ansible.builtin.file:
-    src: /git hub repos/Tools-automate-codes/roles/github-runner/files/path
+    src: /2-GITHUB REPOS/tools-automation-code-T/roles/github-runner/files/path
     dest: /actions-runner/.path
   become_user: grunner
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
