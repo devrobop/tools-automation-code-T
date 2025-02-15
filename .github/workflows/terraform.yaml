@@ -1,9 +1,11 @@
-name: Run github-runner Setup
+name: Provision Tool Infra
 on: [workflow_dispatch]
-jobs: 
+jobs:
   Provision:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - name: Run github-runner setup
-        run: ansible-playbook -i github-runner-internal.devrobo.online, tool-setup.yml -e ansible_user=ec2-user -e ansible_password=DevOps321 -e tool_name=github-runner   
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
