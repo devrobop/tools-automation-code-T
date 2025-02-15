@@ -6,4 +6,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run github-runner setup
-        run: ansible-playbook -i github-runner-internal.devrobo.online, tool-setup.yml -e ansible_user=ec2-user -e ansible_password=DevOps321 -e tool_name=github-runner   
+        run: ansible-playbook -i github-runner-internal.devrobo.online, tool-setup.yml -e ansible_user=${{secrets.SSH_USER}} -e ansible_password=${{secrets.SSH_PASS}} -e tool_name=github-runner   
