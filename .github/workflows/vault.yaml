@@ -7,3 +7,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run Vault setup
         run: ansible-playbook -i vault-internal.devrobo.online, tool-setup.yml -e ansible_user=${{secrets.SSH_USER}} -e ansible_password=${{secrets.SSH_PASS}} -e tool_name=vault    
+
+
