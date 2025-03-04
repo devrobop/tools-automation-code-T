@@ -2,7 +2,7 @@ variable "tools" {
   default = {
 
 
-   github-runner = {
+  github-runner = {
     instance_type = "t3.small"
     policy_name = [ "AdministratorAccess"]
     ports = {}
@@ -21,6 +21,7 @@ variable "tools" {
   minikube = {
     name          = "minikube"
     instance_type = "t3.medium"
+    policy_name = []
     ports = {
       kube = 8443
     }
