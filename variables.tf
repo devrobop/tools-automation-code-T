@@ -21,12 +21,12 @@ variable "tools" {
   minikube = {
     name          = "minikube"
     instance_type = "t3.medium"
-    ports= {
+    ports = {
       kube = 8443
     }
                                                    
     volume_size = 30
-}
+  }
   }
 }
 
