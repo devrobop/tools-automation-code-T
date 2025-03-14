@@ -1,61 +1,77 @@
 # Following steps need to be run manually
-#   sudo curl -L -o /etc/yum.repos.d/gh-cli.repo https://cli.github.com/packages/rpm/gh-cli.repo
-#  sudo dnf install gh -y 
-#  gh auth login -s admin:org
+# sudo curl -L -o /etc/yum.repos.d/gh-cli.repo https://cli.github.com/packages/rpm/gh-cli.repo
+# sudo dnf install gh -y
+# gh auth login -s admin:org
 
 - name: Setup Prompt
   ansible.builtin.shell: set-prompt github-runner
 
-# instead of adding become: ec2-user to remove sudo permissions we also can follow a diff approach by creating a user
+- name: Setup LVM Disk size
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: lvm
 
-- name: Add Github Runner  User
+- name: Add Github Runner User
   ansible.builtin.user:
-    name: github-runner
+    name: grunner
 
-- name: Create runner directory
+- name: Create github directory
   ansible.builtin.file:
     path: /actions-runner
     state: directory
-    owner: github-runner
-    group: github-runner
+    owner: grunner
+    group: grunner
 
-- name: Download runner
+- name: Download & Extract Runner
   ansible.builtin.unarchive:
-    src: https://github.com/actions/runner/releases/download/v2.320.0/actions-runner-linux-x64-2.320.0.tar.gz
-    dest: /actions-runner
+    src: https://github.com/actions/runner/releases/download/v2.317.0/actions-runner-linux-x64-2.317.0.tar.gz
+    dest: "/actions-runner"
     remote_src: yes
-    owner: github-runner
-    group: github-runner
+    owner: grunner
+    group: grunner
+
+- name: Grab Token
+  ansible.builtin.shell: |
+    gh api --method POST -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /orgs/devrobop/actions/runners/registration-token | jq .token
+  register: token
+  become_user: ec2-user # Token can be fetched by ec2-user as gh login was done by that user.
 
 - name: Install libicu dependency
   ansible.builtin.dnf:
     name: libicu
     state: latest
 
-- name: get token
+- name: Get the runner count
   ansible.builtin.shell: |
-    gh api --method POST -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /orgs/devrobop/actions/runners/registration-token | jq .token
-  register: token
-  become_user: ec2-user # token can be fetched by   ec2-user as gh login was done by that user,
+    gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /orgs/devrobop/actions/runners | jq .total_count |xargs
+  register: runner_count
+  become_user: ec2-user
 
-- name: register Runner
-  ansible.builtin.shell: ./config.sh --unattended --url https://github.com/devrobop --token {{ token.stdout }} --name ec2 --runnergroup Default
+- name: Get the runner status
+  ansible.builtin.shell: |
+    gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /orgs/devrobop/actions/runners | jq '.runners[] | select(.name == "ec2") | .status' |xargs
+  register: runner_status
+  become_user: ec2-user
+
+- name: Configure Github Runner
+  ansible.builtin.shell: ./config.sh --url https://github.com/devrobop --token {{ token.stdout }} --runnergroup Default --name ec2 --labels rhel --work _work --replace
   args:
     chdir: /actions-runner
-  become_user: github-runner
-  ignore_errors: yes
+  become_user: grunner
+  when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
-- name: copy service file
+- name: Update Path file
   ansible.builtin.copy:
-    src: github-runner.service
-    dest: /etc/systemd/system/github-runner.service
+    src: path
+    dest: /actions-runner/.path
+  become_user: grunner
+  when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
-- name: start runner service
-  ansible.builtin.systemd_service:
-    name: github-runner
-    daemon-reload: yes
-    enabled: yes
-    state: restarted
+- name: Install Runner Service
+  ansible.builtin.shell: ./svc.sh install grunner ;  ./svc.sh start
+  args:
+    chdir: /actions-runner
+  when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
 - name: Download Terraform Repo file
   ansible.builtin.get_url:
@@ -69,3 +85,7 @@
 
 - name: Install Ansible
   ansible.builtin.shell: pip-3.11 install ansible
+
+###
+##
+#
