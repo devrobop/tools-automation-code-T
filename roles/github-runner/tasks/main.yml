@@ -88,5 +88,5 @@
 
 - name: Install kubectl
   ansible.builtin.dnf:
-    name: Kubectl
-    state: installed
+    name: kubectl
+    state: present
