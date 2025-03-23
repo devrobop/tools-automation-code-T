@@ -86,6 +86,7 @@
 - name: Install Ansible
   ansible.builtin.shell: pip-3.11 install ansible
 
-###
-##
-#
+- name: Install kubectl
+  ansible.builtin.dnf:
+    name: kubectl
+    state: installed
