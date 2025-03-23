@@ -86,7 +86,13 @@
 - name: Install Ansible
   ansible.builtin.shell: pip-3.11 install ansible
 
+- name: copy kubernetes repo file
+  ansible.builtin.copy: 
+  src: kubernetes.repo
+  dest: /etc/yum.repos.d/kubernetes.repo
+
+
 - name: Install kubectl
   ansible.builtin.dnf:
     name: kubectl
-    state: present
+    state: installed 
