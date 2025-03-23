@@ -88,8 +88,8 @@
 
 - name: copy kubectl repo 
   ansible.builtin.copy: 
-    src: kubectl.repo
-    dest: /etc/yum.repos.d/kubectl.repo
+    src: kubernetes.repo
+    dest: /etc/yum.repos.d/kubernetes.repo
 
 
 - name: Install kubectl
