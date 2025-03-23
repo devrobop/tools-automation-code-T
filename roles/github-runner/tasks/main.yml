@@ -91,7 +91,6 @@
     src: kubernetes.repo
     dest: /etc/yum.repos.d/kubernetes.repo
 
-
 - name: Install kubectl
   ansible.builtin.dnf:
     name: kubectl
