@@ -1,4 +1,4 @@
-name: Provision Tool Infra
+name: Pro
 on: [workflow_dispatch]
 jobs:
   Provision:
