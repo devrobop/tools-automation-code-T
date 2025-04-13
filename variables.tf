@@ -6,7 +6,7 @@ variable "tools" {
     instance_type = "t3.small"
     policy_name = [ "AdministratorAccess"]
     ports = {}
-    volume_size = 35
+    volume_size = 30
    }
 
   vault = {
@@ -32,5 +32,5 @@ variable "tools" {
 }
 
 variable "hosted_zone_id" {
-  default = "Z09836251ISJVAKGIPMKY"
+  default = "Z05603012F3T2JXBCJLQ4"
 }

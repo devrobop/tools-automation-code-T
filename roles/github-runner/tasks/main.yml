@@ -59,6 +59,8 @@
     chdir: /actions-runner
   become_user: grunner
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
+# when: runner_count.stdout |trim == "0" or runner_status.stdout |trim | lower == "offline"
+# when: runner_count.stdout == ["0", ""] or runner_status.stdout == ["","offline"]
 
 - name: Update Path file
   ansible.builtin.copy:
