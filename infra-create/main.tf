@@ -22,7 +22,7 @@ resource "aws_instance" "tool" {
     Name = var.name
   } 
 
-  lifecycle ={
+  lifecycle {
     ignore_changes = [
       ami
     ]
