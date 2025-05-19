@@ -21,9 +21,13 @@ resource "aws_instance" "tool" {
   tags = {
     Name = var.name
   } 
-}
 
- 
+  lifecycle ={
+    ignore_changes = [
+      ami
+    ]
+  }
+}
 
 resource "aws_security_group" "tool-sg" {
    name        = "${var.name}-sg"
