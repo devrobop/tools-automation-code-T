@@ -1,0 +1,48 @@
+- name: Setup prompt
+  ansible.builtin.shell: set-prompt elk
+
+- name: Copy Elastic repo
+  ansible.builtin.copy:
+    src: elastic.repo
+    dest: /etc/yum.repos.d/elastic.repo
+
+- name: Install Elk Tools
+  ansible.builtin.dnf:
+    name:
+      - elasticsearch
+      - kibana
+      - nginx
+      - logstash
+    state: installed
+
+- name: Copy nginx config file
+  ansible.builtin.copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+
+- name: Copy logstash Config
+  ansible.builtin.template:
+    src: logstash.conf
+    dest: /etc/logstash/conf.d/logstash.conf
+
+- name: start Elk Tools
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    state: restarted
+  loop:
+    - elasticsearch
+    - kibana
+    - nginx
+    - logstash
+
+
+
+
+# Reset admin password
+# /usr/share/elasticsearch/bin/elasticsearch-reset-password  -u elastic
+
+# get a enrollement token  for kibana to connect to elasticsearch
+# /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+
+# get kibana verification
+# /usr/share/kibana/bin/kibana-verification-code
