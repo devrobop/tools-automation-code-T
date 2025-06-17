@@ -40,6 +40,8 @@ variable "tools" {
   }
 }
 
-variable "hosted_zone_id" {
-  default = "Z05603012F3T2JXBCJLQ4"
-}
+
+
+# variable "hosted_zone_id" {
+#   default = "Z05603012F3T2JXBCJLQ4"
+# }
