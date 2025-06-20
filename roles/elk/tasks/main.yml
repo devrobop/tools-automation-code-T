@@ -29,7 +29,7 @@
     state: restarted
     enabled: yes
   loop:
-    - elasticsearch
+    - Elasticsearch
     - kibana
     - nginx
     - logstash
