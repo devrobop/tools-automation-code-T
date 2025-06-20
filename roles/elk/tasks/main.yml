@@ -11,8 +11,6 @@
     name:
       - elasticsearch
       - kibana
-      - nginx
-      - logstash
     state: installed
 
 - name: Copy nginx config file
