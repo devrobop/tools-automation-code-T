@@ -11,6 +11,7 @@
     name:
       - elasticsearch
       - kibana
+      - nginx
     state: installed
 
 - name: Copy nginx config file
