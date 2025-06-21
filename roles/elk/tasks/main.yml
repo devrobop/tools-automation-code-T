@@ -9,7 +9,7 @@
 - name: Install ELK Tools
   ansible.builtin.dnf:
     name:
-      - Elasticsearch
+      - elasticsearch
       - kibana
       - nginx
       - logstash
@@ -30,7 +30,7 @@
     name: "{{ item }}"
     state: restarted
   loop:
-    - Elasticsearch
+    - elasticsearch
     - kibana
     - nginx
     - logstash
