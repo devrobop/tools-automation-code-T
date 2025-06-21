@@ -9,7 +9,7 @@
 - name: Install ELK Tools
   ansible.builtin.dnf:
     name:
-      - elasticsearch
+      - Elasticsearch
       - kibana
       - nginx
       - logstash
